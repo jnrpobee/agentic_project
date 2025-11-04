@@ -1,0 +1,29 @@
+AI Scam detection companion
+(gradio will be used for the User interface)
+
+
+This directory contains the structure and components for the AI Scam detection companion project. It includes modules for data processing, model training, and user interface design to help identify and mitigate scams using artificial intelligence techniques.
+# Project layout
+
+The user supplies the dataset and the trained model. This project runs keyword and tone analysis on user-provided texts to flag potential scams. Place raw data and model files in the locations below; the code in src implements ingestion, keyword/tone extraction, model inference, and a Gradio UI.
+Integration patterns (pick one)
+
+1) Tool-calling (week3 — single orchestrator + tool adapters)
+- Data flow: data/raw -> src/data_processing -> tool_runner (keyword/tone tools) -> models/trained_models -> src/ui
+
+1) Multi-agent (week6 — specialized agents + coordinator)
+- Add: src/agents/ with role-specific agents: extractor_agent.py, sentiment_agent.py, scorer_agent.py, aggregator_agent.py
+
+Common notes
+- Tests: extend tests/ with tool/agent unit tests and integration scenarios
+- UI: src/ui loads coordinator/orchestrator (choose one) and exposes synchronous fallback for small inputs
+- Security/robustness: validate inputs, apply rate limits, sandbox external calls, log traces for reproducibility
+- Deployment: containerize with environment variables for tool endpoints and model paths
+
+Notes:
+- Expected input formats: CSV/JSON/Text. Place originals in data/raw; use data/processed for staged outputs.
+- Supported model formats: common PyTorch, scikit-learn, ONNX, or serialized pickles—put into models/trained_models.
+- The pipeline extracts keywords and computes tone/sentiment features, then runs the provided model to score/label potential scams.
+- Keep configuration (paths, thresholds) in a central config file or environment variables for reproducible runs.
+- The Gradio UI in src/ui should load the model from models/trained_models and accept user text for on-demand analysis.
+
