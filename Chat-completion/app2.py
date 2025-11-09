@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import gradio as gr
 from openai import OpenAI
+import gradio_client as grc
 
 # --- Config ---
 MODEL = os.getenv("OPENAI_MODEL", "gpt-5-mini")
@@ -18,6 +19,8 @@ else:
     print("Warning: prompt.md file not found. Using default prompt.")
 
 client = OpenAI(api_key=API_KEY)
+
+# --- Gradio UI ---
 
 CUSTOM_CSS = """
 :root { --radius-xl: 18px; }
@@ -71,7 +74,8 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
             chatbot = gr.Chatbot(
                 label="Conversation",
                 elem_id="chatbot",
-                bubble_full_width=False,
+                # bubble_full_width=False,
+                type="messages",
                 layout="bubble",
                 show_copy_button=True,
             )
@@ -109,7 +113,7 @@ with gr.Blocks(css=CUSTOM_CSS, theme=gr.themes.Soft()) as demo:
     msg.submit(chat_agent, [msg, chatbot], [chatbot, msg])
 
     clear.click(lambda: [], None, chatbot)
-    ex1.click(fill_example, inputs=None, outputs=msg, queue=False, _js=None, api_name=False)
+    ex1.click(fill_example, inputs=None, outputs=msg, queue=False)
     ex2.click(fill_example, inputs=None, outputs=msg, queue=False)
     ex3.click(fill_example, inputs=None, outputs=msg, queue=False)
 
