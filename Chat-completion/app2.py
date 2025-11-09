@@ -5,12 +5,18 @@ import gradio as gr
 from openai import OpenAI
 
 # --- Config ---
-MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+MODEL = os.getenv("OPENAI_MODEL", "gpt-5-mini")
 API_KEY = os.getenv("OPENAI_API_KEY")
 if not API_KEY:
     raise SystemExit("Please set OPENAI_API_KEY in your environment.")
 
-SYSTEM_PROMPT = Path("prompt.md").read_text(encoding="utf-8")
+# SYSTEM_PROMPT = Path("prompt.md").read_text(encoding="utf-8")
+prompt_path = Path(__file__).resolve().parent / "prompt.md"
+if prompt_path.exists():
+    SYSTEM_PROMPT = prompt_path.read_text(encoding="utf-8")
+else:
+    print("Warning: prompt.md file not found. Using default prompt.")
+
 client = OpenAI(api_key=API_KEY)
 
 CUSTOM_CSS = """
@@ -34,7 +40,7 @@ def openai_chat(messages):
     resp = client.chat.completions.create(
         model=MODEL,
         messages=messages,
-        temperature=0,
+        temperature=1,
         max_tokens=700,
     )
     return resp.choices[0].message.content

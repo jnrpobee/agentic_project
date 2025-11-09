@@ -6,6 +6,7 @@ from openai import OpenAI
 
 # --- Setup ---
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+# uncomment line 10 and comment 11 to 15 if your prompt file is not found. I made the addition to be able to call it.
 # SYSTEM_PROMPT = Path("prompt.md").read_text()
 prompt_path = Path(__file__).resolve().parent / "prompt.md"
 if prompt_path.exists():
@@ -25,9 +26,10 @@ def chat_with_agent(message, history):
     # Note: gpt-5-mini in this environment does not accept temperature=0 (error shown in traceback).
     # Use the model's default temperature (1) or omit the temperature parameter entirely.
     response = client.chat.completions.create(
-        model="gpt-5-mini", # models we can use: "gpt-5-mini", "gpt-5", "gpt-4o-mini", "gpt-4o"
+        model="gpt-5", # models we can use: "gpt-5-mini", "gpt-5-nano", "gpt-5", "gpt-4o-mini", "gpt-4o"
         messages=messages,
-        temperature=1
+        # I have commented out temperature for now but we can set it if needed.
+        # temperature=1 
     )
     reply = response.choices[0].message.content
     return reply

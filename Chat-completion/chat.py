@@ -6,7 +6,13 @@ from openai import AsyncOpenAI
 
 async def main(prompt_file: Path):
     client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-    system_prompt = prompt_file.read_text()
+    # system_prompt = prompt_file.read_text()
+    prompt_path = Path(__file__).resolve().parent / "prompt.md"
+    if prompt_path.exists():
+        system_prompt = prompt_path.read_text(encoding="utf-8")
+    else:
+        print("Warning: prompt.md file not found. Using default prompt.")
+
 
     # start with system prompt
     history = [{"role": "system", "content": system_prompt}]
