@@ -1,11 +1,17 @@
 import os
 from pathlib import Path
 import gradio as gr
+import openai as OpenAI
 from openai import OpenAI
 
 # --- Setup ---
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-SYSTEM_PROMPT = Path("prompt.md").read_text()
+# SYSTEM_PROMPT = Path("prompt.md").read_text()
+prompt_path = Path(__file__).resolve().parent / "prompt.md"
+if prompt_path.exists():
+    SYSTEM_PROMPT = prompt_path.read_text(encoding="utf-8")
+else:
+    print("Warning: prompt.md file not found. Using default prompt.")
 
 # --- Chat logic ---
 def chat_with_agent(message, history):
