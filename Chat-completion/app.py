@@ -22,10 +22,12 @@ def chat_with_agent(message, history):
         messages.append({"role": "assistant", "content": ai})
     messages.append({"role": "user", "content": message})
 
+    # Note: gpt-5-mini in this environment does not accept temperature=0 (error shown in traceback).
+    # Use the model's default temperature (1) or omit the temperature parameter entirely.
     response = client.chat.completions.create(
-        model="gpt-4o-mini",  # or "gpt-4o"
+        model="gpt-5-mini", # models we can use: "gpt-5-mini", "gpt-5", "gpt-4o-mini", "gpt-4o"
         messages=messages,
-        temperature=0
+        temperature=1
     )
     reply = response.choices[0].message.content
     return reply
